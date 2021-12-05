@@ -1,5 +1,6 @@
-package com.up42.backendchallenge.feature.model;
+package com.up42.backendchallenge.feature.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "Response DTO", description = "ResponseDTO response model")
 public class ResponseDTO {
     private String id;
     private Long timestamp;
