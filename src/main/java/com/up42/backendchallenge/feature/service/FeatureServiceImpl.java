@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.up42.backendchallenge.feature.dto.ResponseDTO;
+import com.up42.backendchallenge.feature.exception.ResourceNotFoundCustomException;
 import com.up42.backendchallenge.feature.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,6 +64,7 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     public ResponseDTO findFeatureById(String Id) {
         ContextFeature context = contexts.stream().filter(contextFeature -> checkIfFeatureMatches(contextFeature, Id) != null).findAny().orElse(null);
+        if (context == null) throw new ResourceNotFoundCustomException("No resource found with " + Id);
         Properties properties = checkIfFeatureMatches(context, Id).getProperties();
         Acquisition acquisition = properties.getAcquisition();
         return new ResponseDTO(properties.getId(), objectToLongParser(properties.getTimestamp()), objectToLongParser(acquisition.getBeginViewingDate()), objectToLongParser(acquisition.getEndViewingDate()), acquisition.getMissionName());
@@ -78,6 +80,7 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     public byte[] findQuickLookById(String Id) {
         ContextFeature context = contexts.stream().filter(contextFeature -> checkIfFeatureMatches(contextFeature, Id) != null).findAny().orElse(null);
+        if (context == null) throw new ResourceNotFoundCustomException("No quicklook image found with " + Id);
         Properties properties = checkIfFeatureMatches(context, Id).getProperties();
         return Base64.getDecoder().decode(properties.getQuicklook());
     }
